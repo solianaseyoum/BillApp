@@ -21,11 +21,38 @@ function unnamedFunc() {
   var bills = "Bills";
   database.ref(bills).once('value').then(function(snapshot){
     var allTheBills = snapshot.val();
-    for (var bill in allTheBills) {
+    emptyString = "";
+    counter = 0;
+    if (sessionStorage.womensrights == "true") {
+    emptyString = "women's rights, ";
+    counter = counter + 1;
+    } if (sessionStorage.lgbtrights == "true") {
+      emptyString = emptyString + "LGBT rights, ";
+      counter = counter + 1;
+    } if (sessionStorage.environment == "true") {
+      emptyString = emptyString + "environment, ";
+      counter = counter + 1;
+    } if (sessionStorage.raceethnic == "true") {
+      emptyString = emptyString + "race and ethnic relations, ";
+      counter = counter + 1;
+    }
+    if (counter > 0) {
+      //emptyString = emptyString.slice(0, -1);
+      emptyString = emptyString.substring(0, emptyString.length - 2);
+    }
+    var headingBills = document.createElement("div");
+    var causeAreasDisplay = document.createElement("h1");
+    causeAreasDisplay.innerHTML = "Your cause area(s): " + emptyString;
+  headingBills.appendChild(causeAreasDisplay);
+  document.getElementById("headingBillsDiv").appendChild(headingBills);
+
+
+    for (var bill in allTheBills) {// begin for
       var billInfo = allTheBills[bill];
       var summary = billInfo["summary"];
       var status = billInfo["status"];
       var tag = billInfo["tag"]
+
     //  console.log(sessionStorage.womensrights);
       //console.log(billInfo["tag"]);
 
@@ -44,45 +71,41 @@ function unnamedFunc() {
 
       } else if ((sessionStorage.environment == "true") && (billInfo["tag"] == "environment")) {
         showSomeBills(bill, summary, status, tag);
-      /*
-        document.write(bill + "<br>");
-        document.write("Summary: \t" + summary + "<br>");
-        document.write("Tag: \t" + tag + "<br>"+ "<br>"+ "<br>");*/
+
 
       } else if ((sessionStorage.raceethnic == "true") && (billInfo["tag"] == "race and ethnic relations")) {
         showSomeBills(bill, summary, status, tag);
-      /*  document.write(bill + "<br>");
-        document.write("Summary: \t" + summary + "<br>");
-        document.write("Tag: \t" + tag + "<br>"+ "<br>"+ "<br>");*/
+
 
       }
-    }
-    //console.log(theCoolList);
-  //  document.getElementById("showmethebills").innerHTML = theCoolList;
+    }//end for
+
 
   });
-
 }
 function  showSomeBills(bill, summary, status, tag){
-  var theWholeBill = document.createElement("div")
-   var billName = document.createElement("h4");
-   var billSummary = document.createElement("p");
-   var billStatus = document.createElement("p");
-   var billTag = document.createElement("p");
-  var everyBillDiv = document.getElementById("allOfTheBillsDiv");
 
+
+  var theWholeBill = document.createElement("div");
+     var billName = document.createElement("h4");
+     var billSummary = document.createElement("p");
+     var billStatus = document.createElement("p");
+     var billTag = document.createElement("p");
+  var everyBillDiv = document.getElementById("allOfTheBillsDiv");
 
     billName.innerHTML = bill;
     billSummary.innerHTML = summary;
     billStatus.innerHTML = "Status: " + status;
     billTag.innerHTML = "Tag: " + tag;
 
+
     theWholeBill.appendChild(billName);
     theWholeBill.appendChild(billSummary);
     theWholeBill.appendChild(billStatus);
     theWholeBill.appendChild(billTag);
+    document.getElementById("allOfTheBillsDiv").appendChild(theWholeBill);
+    //document.getElementById("headingBills").innerHTML = "The bills in your cause area of " + tag;
 
- document.getElementById("allOfTheBillsDiv").appendChild(theWholeBill);
 }
  function displayFilteredBills() {
   if (sessionStorage.womensrights == true) {
